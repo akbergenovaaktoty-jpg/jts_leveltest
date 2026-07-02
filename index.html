@@ -218,6 +218,15 @@ body{font-family:'Outfit',sans-serif;background:var(--white);color:var(--text);m
   .test-topbar{padding:0 1rem;}
   .age-header{padding:.85rem 1rem;}
 }
+
+/* Adaptive meter */
+.adaptive-meter{margin:1rem 0 0;}
+.meter-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.meter-track{height:8px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;position:relative;}
+.meter-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#60A5FA,#A78BFA,#F59E0B);transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.meter-labels{display:flex;justify-content:space-between;margin-top:5px;}
+.meter-lbl{font-size:9px;color:rgba(255,255,255,.35);font-weight:600;}
+.adaptive-badge{display:inline-block;background:rgba(167,139,250,.2);border:1px solid rgba(167,139,250,.35);color:var(--purple-light);font-size:10px;font-weight:600;border-radius:99px;padding:3px 10px;margin-top:8px;letter-spacing:.04em;}
 </style>
 </head>
 <body>
@@ -357,6 +366,20 @@ body{font-family:'Outfit',sans-serif;background:var(--white);color:var(--text);m
       <div class="res-code" id="res-code">B1</div>
       <div class="res-name" id="res-name">Intermediate</div>
       <div class="res-score" id="res-score">24 / 40</div>
+      <div class="adaptive-meter">
+        <div class="meter-label">Ability Score</div>
+        <div class="meter-track">
+          <div class="meter-fill" id="meter-fill" style="width:0%"></div>
+        </div>
+        <div class="meter-labels">
+          <span class="meter-lbl">A1</span>
+          <span class="meter-lbl">A2</span>
+          <span class="meter-lbl">B1</span>
+          <span class="meter-lbl">B2</span>
+          <span class="meter-lbl">C1</span>
+        </div>
+        <div class="adaptive-badge" id="adaptive-badge">Adaptive CAT Test</div>
+      </div>
     </div>
     <div class="cert-card fade-up-1">
       <div class="cert-label" id="cert-lbl">🎓 Сертификат</div>
@@ -452,98 +475,138 @@ const T={
 // QUESTION BANKS — 3 DIFFERENT SETS
 // ══════════════════════════════════════
 
-// ── KIDS (6-12) — fun topics: animals, food, colors, school, family ──
+// ── KIDS (6-12) — 30 questions, levels 1-3 ──
 const kidsQuestions = [
-  // Grammar
-  {part:'Grammar',cat:'Grammar',text:'I ___ a dog. His name is Max.',opts:['have','has','am','is'],ans:0,exp:'With "I" we use "have". Example: I have a cat.'},
-  {part:'Grammar',cat:'Grammar',text:'The cat ___ on the sofa.',opts:['sit','sits','sitting','sitted'],ans:1,exp:'With "the cat" (he/she/it) we add -s to the verb: sits.'},
-  {part:'Grammar',cat:'Grammar',text:'There ___ two birds in the tree.',opts:['is','am','are','be'],ans:2,exp:'With plural nouns (two birds) we use "are".'},
-  {part:'Grammar',cat:'Grammar',text:'___ you like pizza?',opts:['Are','Does','Do','Is'],ans:2,exp:'Questions with "you" use "Do": Do you like pizza?'},
-  {part:'Grammar',cat:'Grammar',text:'She ___ eating an apple now.',opts:['is','are','am','be'],ans:0,exp:'She is + verb-ing. Present Continuous shows what is happening now.'},
-  {part:'Grammar',cat:'Grammar',text:'My favourite colour ___ blue.',opts:['am','is','are','be'],ans:1,exp:'"My favourite colour" is singular, so we use "is".'},
-  {part:'Grammar',cat:'Grammar',text:'Yesterday I ___ to school.',opts:['go','goes','went','gone'],ans:2,exp:'"Yesterday" means the past. The past of "go" is "went".'},
-  // Vocabulary
-  {part:'Vocabulary',cat:'Vocabulary',text:'What animal says "meow"? 🐱',opts:['Dog','Cat','Bird','Fish'],ans:1,exp:'A cat says "meow"! Dogs say "woof", birds say "tweet".'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'Which one is a fruit? 🍎',opts:['Carrot','Potato','Apple','Bread'],ans:2,exp:'An apple is a fruit! Carrots and potatoes are vegetables.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'What colour is the sky? ☁️',opts:['Red','Green','Blue','Yellow'],ans:2,exp:'The sky is blue! And the grass is green, the sun is yellow.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'How many legs does a spider have? 🕷️',opts:['4','6','8','10'],ans:2,exp:'A spider has 8 legs! Insects have 6 legs, cats have 4 legs.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'What do you use to write? ✏️',opts:['Fork','Pencil','Spoon','Ruler'],ans:1,exp:'You write with a pencil or pen! A fork and spoon are for eating.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'Which animal lives in the ocean? 🌊',opts:['Lion','Elephant','Dolphin','Giraffe'],ans:2,exp:'Dolphins live in the ocean! Lions live in Africa, elephants in forests.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'What is the opposite of "big"?',opts:['Fast','Small','Heavy','Tall'],ans:1,exp:'Big ↔ Small. Fast ↔ Slow. Heavy ↔ Light. Tall ↔ Short.'},
-  // Listening — kids dialogue: two friends talking about their pets
-  {part:'Listening',cat:'Listening',text:'What pet does Emma have?',opts:['A dog','A cat','A rabbit','A fish'],ans:2,exp:'Emma says: "I have a rabbit. His name is Fluffy."'},
-  {part:'Listening',cat:'Listening',text:'What colour is Fluffy?',opts:['Black','White','Brown','Orange'],ans:1,exp:'Emma says: "He is white with brown spots."'},
-  {part:'Listening',cat:'Listening',text:'What does Leo want for his birthday?',opts:['A bicycle','A puppy','A computer','Books'],ans:1,exp:'Leo says: "I really want a puppy for my birthday!"'},
-  // Reading — short story about a day at school
-  {part:'Reading',cat:'Reading',text:'What subject does Tom love the most?',opts:['Maths','English','Art','Science'],ans:2,exp:'The story says: "Tom loves Art class the most. He draws animals every day."'},
-  {part:'Reading',cat:'Reading',text:'What does Tom draw every day?',opts:['Cars','Houses','Animals','Trees'],ans:2,exp:'The story says: "He draws animals every day."'},
-  {part:'Reading',cat:'Reading',text:'What does Tom eat for lunch?',opts:['Pizza','A sandwich','Soup','Rice'],ans:1,exp:'The story says: "At lunchtime Tom eats a sandwich and drinks juice."'},
+  // GRAMMAR (12)
+  {part:'Grammar',cat:'Grammar',text:'I ___ a dog. His name is Max.',opts:['have','has','am','is'],ans:0,lvl:1,exp:'With "I" we always use "have". Example: I have a cat, I have a book.'},
+  {part:'Grammar',cat:'Grammar',text:'The cat ___ on the sofa every day.',opts:['sit','sits','sitting','sitted'],ans:1,lvl:1,exp:'With "the cat" (he/she/it) we add -s: sits, runs, eats.'},
+  {part:'Grammar',cat:'Grammar',text:'There ___ two birds in the tree.',opts:['is','am','are','be'],ans:2,lvl:1,exp:'Two birds = more than one = plural. Use "are": There are two birds.'},
+  {part:'Grammar',cat:'Grammar',text:'___ you like pizza?',opts:['Are','Does','Do','Is'],ans:2,lvl:1,exp:'Questions with "you" use "Do": Do you like pizza? Do you have a pet?'},
+  {part:'Grammar',cat:'Grammar',text:'She ___ eating an apple right now.',opts:['is','are','am','be'],ans:0,lvl:1,exp:'"Right now" = happening this moment. She IS eating. Always: she is, he is, it is.'},
+  {part:'Grammar',cat:'Grammar',text:'Yesterday I ___ to the zoo.',opts:['go','goes','went','gone'],ans:2,lvl:2,exp:'"Yesterday" = past. The past of GO is WENT. It is irregular — you must remember it!'},
+  {part:'Grammar',cat:'Grammar',text:'My brother ___ not like vegetables.',opts:['do','does','is','are'],ans:1,lvl:2,exp:'With he/she/it in negative sentences, use DOES NOT (doesn't): He doesn't like vegetables.'},
+  {part:'Grammar',cat:'Grammar',text:'How many legs ___ a spider have?',opts:['do','does','is','has'],ans:1,lvl:2,exp:'With "a spider" (it), we use DOES in questions: How many legs does a spider have? Answer: 8!'},
+  {part:'Grammar',cat:'Grammar',text:'We ___ playing football when it started to rain.',opts:['was','were','are','is'],ans:1,lvl:2,exp:'"We" uses WERE in the past. We WERE playing = past continuous, action in progress.'},
+  {part:'Grammar',cat:'Grammar',text:'I have ___ my homework. Now I can play!',opts:['do','did','done','doing'],ans:2,lvl:3,exp:'Have + DONE (past participle). "I have done" = Present Perfect, action just finished.'},
+  {part:'Grammar',cat:'Grammar',text:'If it ___ tomorrow, we will stay inside.',opts:['rain','rains','will rain','rained'],ans:1,lvl:3,exp:'First conditional: If + present simple, will + verb. Real possibility in the future.'},
+  {part:'Grammar',cat:'Grammar',text:'She ___ never seen snow before.',opts:['have','has','had','is'],ans:1,lvl:3,exp:'She HAS never seen = Present Perfect. She/he/it always uses HAS (not have).'},
+  // VOCABULARY (12)
+  {part:'Vocabulary',cat:'Vocabulary',text:'What animal says "meow"? 🐱',opts:['Dog','Cat','Bird','Fish'],ans:1,lvl:1,exp:'A cat says "meow"! Dogs say "woof", birds say "tweet", cows say "moo".'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'Which one is a fruit? 🍎',opts:['Carrot','Potato','Apple','Bread'],ans:2,lvl:1,exp:'An apple is a fruit! Carrots and potatoes are vegetables. Bread is made from flour.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What colour is the sky on a sunny day? ☀️',opts:['Red','Green','Blue','Yellow'],ans:2,lvl:1,exp:'The sky is BLUE on a sunny day! At sunset it can be orange and red.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What do you use to write at school? ✏️',opts:['Fork','Pencil','Spoon','Scissors'],ans:1,lvl:1,exp:'You write with a pencil or pen! A fork and spoon are for eating, scissors for cutting.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'Which animal lives in the ocean? 🌊',opts:['Lion','Elephant','Dolphin','Giraffe'],ans:2,lvl:1,exp:'Dolphins live in the ocean! Lions live in Africa, elephants in forests and savannas.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What is the opposite of "happy"?',opts:['Angry','Sad','Tired','Hungry'],ans:1,lvl:2,exp:'Happy ↔ Sad. Angry means mad. Tired means sleepy. Hungry means you want food.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'Which word means "very big"?',opts:['Tiny','Huge','Soft','Bright'],ans:1,lvl:2,exp:'HUGE means extremely big. Tiny = very small. Soft = not hard. Bright = full of light.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What does "exhausted" mean?',opts:['Very excited','Very tired','Very hungry','Very cold'],ans:1,lvl:2,exp:'EXHAUSTED = extremely tired. After running a marathon, you would feel exhausted!'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'Which word means the same as "quick"?',opts:['Slow','Heavy','Fast','Loud'],ans:2,lvl:2,exp:'Quick and Fast are synonyms — they mean the same thing. A cheetah is very fast/quick!'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What does "curious" mean?',opts:['Scared','Wanting to know more','Very happy','Very strong'],ans:1,lvl:3,exp:'CURIOUS means wanting to learn or know about something. Cats are famously curious animals!'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What is a "habitat"?',opts:['A type of food','The natural home of an animal','A school subject','A piece of clothing'],ans:1,lvl:3,exp:'A HABITAT is the natural environment where an animal lives. A fish's habitat is water.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'Choose the correct sentence:',opts:['She go to school','He don't like cats','They are playing outside','We was happy'],ans:2,lvl:3,exp:'"They are playing outside" is correct. Go→Goes, Don't→Doesn't, Was→Were for "we".'},
+  // LISTENING (3)
+  {part:'Listening',cat:'Listening',text:'What pet does Emma have?',opts:['A dog','A cat','A rabbit','A fish'],ans:2,lvl:1,exp:'Emma says: "I have a rabbit. His name is Fluffy."'},
+  {part:'Listening',cat:'Listening',text:'What colour is Fluffy?',opts:['All black','All white','White with brown spots','Brown with white spots'],ans:2,lvl:2,exp:'Emma says: "He is white with brown spots."'},
+  {part:'Listening',cat:'Listening',text:'What will Leo name his puppy?',opts:['Max','Biscuit','Fluffy','Rocket'],ans:3,lvl:2,exp:'Leo says: "I'll call him Rocket."'},
+  // READING (3)
+  {part:'Reading',cat:'Reading',text:'What is Tom's favourite school subject?',opts:['Maths','English','Art','Science'],ans:2,lvl:1,exp:'The story says: "Tom loves Art class the most. He draws animals every day."'},
+  {part:'Reading',cat:'Reading',text:'What does Tom eat at lunchtime?',opts:['Pizza','A sandwich and juice','Soup','Rice and water'],ans:1,lvl:2,exp:'The story says: "At lunchtime Tom eats a sandwich and drinks juice."'},
+  {part:'Reading',cat:'Reading',text:'What is the name of Tom's pet rabbit?',opts:['Fluffy','Max','Rocket','Biscuit'],ans:3,lvl:2,exp:'The story says: "Tom has a pet rabbit named Biscuit."'},
 ];
 
-// ── TEENS (13-25) — music, social media, travel, movies, tech ──
+// ── TEENS (13-25) — 40 questions, levels 1-4, music/travel/tech/social media ──
 const teensQuestions = [
-  // Grammar
-  {part:'Grammar',cat:'Grammar',text:'I ___ watching TV when you called.',opts:['was','am','were','be'],ans:0,exp:'Past Continuous with "I" = was + -ing. "You called" is the interrupting action.'},
-  {part:'Grammar',cat:'Grammar',text:'She has lived in London ___ 2019.',opts:['for','since','from','during'],ans:1,exp:'"Since" + specific point in time (2019). "For" + duration (for 3 years).'},
-  {part:'Grammar',cat:'Grammar',text:'If I ___ famous, I would travel the world.',opts:['am','was','were','will be'],ans:2,exp:'2nd conditional: "If I were..." (not "was") — imaginary situation.'},
-  {part:'Grammar',cat:'Grammar',text:'By the time the concert started, we ___ our seats.',opts:['found','have found','had found','were finding'],ans:2,exp:'Past Perfect = "had + past participle". Action completed before another past action.'},
-  {part:'Grammar',cat:'Grammar',text:'___ you mind turning down the music?',opts:['Do','Would','Could','Will'],ans:1,exp:'"Would you mind + -ing" is a polite request. Very common in English!'},
-  {part:'Grammar',cat:'Grammar',text:'Not only ___ the song, but she also wrote it.',opts:['she sang','sang she','did she sing','she did sing'],ans:2,exp:'Inversion after "Not only": auxiliary verb comes before subject.'},
-  {part:'Grammar',cat:'Grammar',text:'The new album ___ over 10 million times this week.',opts:['streamed','was streamed','has been streamed','had streamed'],ans:2,exp:'Present Perfect Passive: action happened recently, result matters now.'},
-  {part:'Grammar',cat:'Grammar',text:'Had she posted earlier, she ___ more likes.',opts:['gets','got','would get','would have gotten'],ans:3,exp:'3rd conditional: "Had she..." = "If she had...". Result: "would have + past participle".'},
-  // Vocabulary
-  {part:'Vocabulary',cat:'Vocabulary',text:'What does "viral" mean on social media?',opts:['Deleted','Shared by millions','Private','Banned'],ans:1,exp:'"Going viral" means content spreads rapidly and is seen by millions of people.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'What is a "playlist"?',opts:['A list of friends','A collection of songs','A type of app','A music video'],ans:1,exp:'A playlist is a collection of songs you can listen to in order.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'"Exhausted" is closest in meaning to:',opts:['Excited','Very tired','Confused','Bored'],ans:1,exp:'"Exhausted" means completely drained of energy — extremely tired.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'What does "stream" mean in music?',opts:['Download a song','Listen online without downloading','Record music','Buy an album'],ans:1,exp:'Streaming means listening to music online in real time (Spotify, Apple Music).'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'"Ambitious" describes someone who:',opts:['Is lazy','Has strong desire to succeed','Is very funny','Likes sleeping'],ans:1,exp:'Ambitious = having a strong desire and determination to achieve success.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'What is a "subplot" in a movie?',opts:['The main story','A secondary story within the main story','The ending','The opening scene'],ans:1,exp:'A subplot is a secondary storyline that runs alongside the main plot.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'"Authentic" means:',opts:['Fake','Real and genuine','Very popular','Expensive'],ans:1,exp:'"Authentic" means genuine, real, not fake. "That restaurant has authentic Italian food."'},
-  // Listening — teens dialogue: friends planning a trip
-  {part:'Listening',cat:'Listening',text:'Where do Mia and Jake want to go?',opts:['Paris','Barcelona','Tokyo','New York'],ans:2,exp:'Mia says: "I\'ve always wanted to go to Tokyo. The food, the culture, everything!"'},
-  {part:'Listening',cat:'Listening',text:'What is Jake worried about?',opts:['The weather','The language barrier','The cost','The food'],ans:2,exp:'Jake says: "I\'m a bit worried about the cost — flights to Japan are expensive."'},
-  {part:'Listening',cat:'Listening',text:'What does Mia suggest to save money?',opts:['Take the train','Book early','Go in winter','Stay with friends'],ans:1,exp:'Mia says: "If we book like 3 months in advance, we can get really cheap flights."'},
-  {part:'Listening',cat:'Listening',text:'When do they plan to go?',opts:['This summer','Next spring','In December','Next year'],ans:1,exp:'Jake says: "Let\'s aim for next spring then."'},
-  {part:'Listening',cat:'Listening',text:'What does Jake want to do in Tokyo?',opts:['Visit museums','Try street food','See concerts','Go shopping'],ans:1,exp:'Jake says: "And I really want to try all the street food!"'},
-  // Reading — article about social media and mental health
-  {part:'Reading',cat:'Reading',text:'According to the passage, what is the main concern about social media for teens?',opts:['It wastes time','It affects self-esteem and mental health','It is addictive','It reduces study time'],ans:1,exp:'The passage states that constant comparison on social media negatively affects teenagers\' self-esteem and mental health.'},
-  {part:'Reading',cat:'Reading',text:'What does the passage suggest teens should do?',opts:['Delete all apps','Take regular breaks from social media','Only follow positive accounts','Never use social media'],ans:1,exp:'The passage recommends taking regular "digital detox" breaks to protect mental wellbeing.'},
-  {part:'Reading',cat:'Reading',text:'What does "digital detox" mean in the passage?',opts:['Deleting apps permanently','A break from technology','Using technology wisely','Learning about technology'],ans:1,exp:'In context, "digital detox" means deliberately taking a break from screens and social media.'},
-  {part:'Reading',cat:'Reading',text:'The word "curated" in the passage means:',opts:['Taken randomly','Carefully selected and presented','Edited with filters','Shared publicly'],ans:1,exp:'"Curated" means carefully chosen and arranged — social media shows a curated (perfect) version of life.'},
-  {part:'Reading',cat:'Reading',text:'What is the overall tone of the passage?',opts:['Angry','Humorous','Balanced and informative','Pessimistic'],ans:2,exp:'The passage presents both the appeal of social media and its risks — a balanced, informative tone.'},
+  // GRAMMAR (16)
+  {part:'Grammar',cat:'Grammar',text:'I ___ watching a new series when my phone died.',opts:['was','am','were','been'],ans:0,lvl:1,exp:'Past Continuous with "I" = WAS + -ing. The phone dying interrupted the action.'},
+  {part:'Grammar',cat:'Grammar',text:'She has lived in London ___ she was 15.',opts:['for','since','from','during'],ans:1,lvl:1,exp:'"Since" + specific point in time. "For" + duration (for 3 years). She was 15 = point in time.'},
+  {part:'Grammar',cat:'Grammar',text:'They ___ already seen that film twice.',opts:['have','has','had','are'],ans:0,lvl:1,exp:'THEY + HAVE. Present Perfect: have/has + past participle. She/he/it = HAS, rest = HAVE.'},
+  {part:'Grammar',cat:'Grammar',text:'___ you finish your homework, you can go out.',opts:['Until','Unless','Once','Despite'],ans:2,lvl:2,exp:'"Once you finish" = as soon as you finish. It means the condition must be met first.'},
+  {part:'Grammar',cat:'Grammar',text:'If I ___ famous, I'd travel everywhere.',opts:['am','was','were','will be'],ans:2,lvl:2,exp:'2nd conditional: IF + past simple (were), WOULD + verb. Imaginary/unlikely situation.'},
+  {part:'Grammar',cat:'Grammar',text:'By the time the concert started, we ___ our seats.',opts:['found','have found','had found','were finding'],ans:2,lvl:2,exp:'Past Perfect: HAD + past participle. Action completed BEFORE another past action.'},
+  {part:'Grammar',cat:'Grammar',text:'___ you mind turning down the music a bit?',opts:['Do','Would','Could','Will'],ans:1,lvl:2,exp:'"Would you mind + -ing?" is a very polite request. Common in English conversation.'},
+  {part:'Grammar',cat:'Grammar',text:'The new album ___ over 50 million times this week.',opts:['streamed','was streamed','has been streamed','had streamed'],ans:2,lvl:2,exp:'Present Perfect Passive: HAS BEEN + past participle. Recent action with a present result.'},
+  {part:'Grammar',cat:'Grammar',text:'Not only ___ the song, but she also produced it.',opts:['she wrote','wrote she','did she write','she did write'],ans:2,lvl:3,exp:'Inversion after "Not only": auxiliary (DID) comes before subject. Formal/emphatic structure.'},
+  {part:'Grammar',cat:'Grammar',text:'She ___ be tired — she worked a 12-hour shift.',opts:['must','should','might','can'],ans:0,lvl:3,exp:'MUST = logical certainty based on evidence. We're almost 100% sure she is tired.'},
+  {part:'Grammar',cat:'Grammar',text:'Had she posted earlier, she ___ more engagement.',opts:['gets','got','would get','would have gotten'],ans:3,lvl:3,exp:'3rd conditional: HAD + past participle → WOULD HAVE + past participle. Unreal past.'},
+  {part:'Grammar',cat:'Grammar',text:'The documentary ___ by the time we arrived.',opts:['already started','had already started','has already started','already starts'],ans:1,lvl:3,exp:'Past Perfect: HAD + past participle. Action completed before another past moment.'},
+  {part:'Grammar',cat:'Grammar',text:'I wish I ___ more time to travel.',opts:['have','had','will have','would have'],ans:1,lvl:4,exp:'"I wish + past simple" = wish about present situation. I wish I had = I don't have (but I want it).'},
+  {part:'Grammar',cat:'Grammar',text:'It's high time we ___ something about climate change.',opts:['do','did','have done','will do'],ans:1,lvl:4,exp:'"It's high time + past simple" — urgency that something should happen NOW. Subjunctive mood.'},
+  {part:'Grammar',cat:'Grammar',text:'Rarely ___ such an emotional performance.',opts:['I have seen','I saw','have I seen','did I seen'],ans:2,lvl:4,exp:'Inversion after negative adverbs (Rarely, Never, Seldom): auxiliary + subject. Very formal.'},
+  {part:'Grammar',cat:'Grammar',text:'The app ___ further development before its release.',opts:['requires','is required','requiring','has required'],ans:0,lvl:4,exp:'"Requires" = active voice. The APP (subject) requires something. No passive needed here.'},
+  // VOCABULARY (16)
+  {part:'Vocabulary',cat:'Vocabulary',text:'What does "viral" mean on social media?',opts:['Deleted by admins','Spreading rapidly to millions','Set to private','Flagged as fake'],ans:1,lvl:1,exp:'"Going viral" = content spreads extremely fast and is seen by millions of people.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What is a "collab" in music/YouTube?',opts:['A type of concert','Working together on a project','A music competition','A fan club'],ans:1,lvl:1,exp:'"Collab" = collaboration. Two or more creators/artists working together on content.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Exhausted" is closest in meaning to:',opts:['Excited','Very tired','Confused','Annoyed'],ans:1,lvl:1,exp:'"Exhausted" = completely drained of energy. After a 10km run, you'd be exhausted!'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What does "stream" mean in music context?',opts:['Download permanently','Listen online without downloading','Record your own music','Buy a CD'],ans:1,lvl:1,exp:'Streaming = listening or watching online in real time. Spotify, Netflix, YouTube all stream.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Authentic" means:',opts:['Very expensive','Fake and edited','Real and genuine','Very popular'],ans:2,lvl:2,exp:'"Authentic" = real, genuine, not fake. "That café has authentic Italian food" = truly Italian.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What is a "subplot" in a movie?',opts:['The opening credits','A secondary storyline alongside the main plot','The film's soundtrack','The main character's goal'],ans:1,lvl:2,exp:'A subplot runs alongside the main story and adds depth. It often involves secondary characters.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Procrastinate" means:',opts:['To plan carefully','To delay doing something you should do','To work very fast','To forget something important'],ans:1,lvl:2,exp:'"Procrastinate" = keep putting off tasks. "I should study but I keep procrastinating."'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What does "curated" mean when describing a social media feed?',opts:['Random and unfiltered','Carefully selected and arranged','Automatically generated','Shared by friends'],ans:1,lvl:2,exp:'"Curated" = carefully chosen and arranged. A curated feed shows only selected content.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Ambiguous" means:',opts:['Very clear and obvious','Open to more than one interpretation','Completely wrong','Easy to understand'],ans:1,lvl:3,exp:'"Ambiguous" = having more than one possible meaning. "The ending of the film was ambiguous."'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What does "resilient" mean?',opts:['Easily upset','Able to recover quickly from difficulties','Very creative','Extremely intelligent'],ans:1,lvl:3,exp:'"Resilient" = bouncing back from tough situations. "She's resilient — nothing keeps her down."'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Saturated" market means:',opts:['A market with no competition','A market with too many similar products','A growing market','An illegal market'],ans:1,lvl:3,exp:'A saturated market has too many competitors selling similar things, making it hard to stand out.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'Choose the correct collocation: "___ a decision"',opts:['Do','Make','Take','Have'],ans:1,lvl:3,exp:'"Make a decision" is the correct collocation. We also: make a mistake, make an effort, make progress.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Ephemeral" content (like Stories) means:',opts:['Permanent and saved forever','Lasting only a short time','Edited with filters','Shared publicly'],ans:1,lvl:4,exp:'"Ephemeral" = existing only briefly. Instagram Stories last 24 hours — they're ephemeral.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What does "algorithm" mean in social media context?',opts:['A type of advertisement','A set of rules that decides what content you see','A privacy setting','A type of filter'],ans:1,lvl:4,exp:'Social media algorithms are rules/formulas that decide which posts to show you based on your behaviour.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Polarising" content is content that:',opts:['Everyone agrees with','Strongly divides people's opinions','Is very boring','Gets many views'],ans:1,lvl:4,exp:'"Polarising" = dividing people into opposing camps. Climate change and politics are often polarising topics.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Nuanced" understanding means:',opts:['Very basic and simple','Showing awareness of subtle differences','Completely wrong','Very emotional'],ans:1,lvl:4,exp:'"Nuanced" = aware of subtle distinctions. A nuanced view considers complexity, not just black and white.'},
+  // LISTENING (4)
+  {part:'Listening',cat:'Listening',text:'Where do Mia and Jake want to go on their trip?',opts:['Paris','Barcelona','Tokyo','New York'],ans:2,lvl:1,exp:'Mia says: "I've always wanted to go to Tokyo. The food, the culture, everything!"'},
+  {part:'Listening',cat:'Listening',text:'What is Jake worried about?',opts:['The weather','The language barrier','The cost of flights','The food'],ans:2,lvl:2,exp:'Jake says: "I'm a bit worried about the cost — flights to Japan are expensive."'},
+  {part:'Listening',cat:'Listening',text:'What does Mia suggest to save money?',opts:['Go in winter','Book 3 months in advance','Stay with friends','Take a cheaper route'],ans:1,lvl:2,exp:'Mia says: "If we book like 3 months in advance, we can get really cheap flights."'},
+  {part:'Listening',cat:'Listening',text:'When do they decide to go?',opts:['This summer','Next spring','In December','Next autumn'],ans:1,lvl:3,exp:'Jake says: "Let's aim for next spring then."'},
+  // READING (4)
+  {part:'Reading',cat:'Reading',text:'What is the main concern about social media for teens according to the passage?',opts:['It wastes time','It harms self-esteem and mental health','It is highly addictive','It reduces study time'],ans:1,lvl:2,exp:'The passage states: constant comparison on social media negatively affects teenagers' self-esteem and mental health.'},
+  {part:'Reading',cat:'Reading',text:'What does "digital detox" mean in the passage?',opts:['Deleting all social media apps permanently','A deliberate break from screens and technology','Using technology more responsibly','Learning about online safety'],ans:1,lvl:2,exp:'In context, "digital detox" = deliberately stepping away from screens to protect mental wellbeing.'},
+  {part:'Reading',cat:'Reading',text:'What does the passage say about teens who spend 3+ hours daily on social media?',opts:['They become more creative','They perform better at school','They are more likely to experience anxiety','They make more friends'],ans:2,lvl:3,exp:'The passage states: teens who spend more than 3 hours daily on social media show higher rates of anxiety and low self-esteem.'},
+  {part:'Reading',cat:'Reading',text:'The word "curated" in the passage most closely means:',opts:['Randomly generated','Carefully selected to appear perfect','Shared without editing','Automatically posted'],ans:1,lvl:3,exp:'"Curated" = carefully chosen and arranged. Social media shows a curated (perfect-looking) version of people's lives.'},
 ];
 
-// ── ADULTS (26-60) — career, business, health, news, finance ──
+// ── ADULTS (26-60) — 40 questions, levels 1-5, business/career/health/finance ──
 const adultsQuestions = [
-  // Grammar
-  {part:'Grammar',cat:'Grammar',text:'The merger ___ by the board last Tuesday.',opts:['approved','was approved','has approved','had been approving'],ans:1,exp:'Passive voice: "was approved" = subject received the action. Used when who did it is less important.'},
-  {part:'Grammar',cat:'Grammar',text:'Had the contract ___ earlier, we would have avoided the dispute.',opts:['signed','been signed','sign','be signed'],ans:1,exp:'3rd conditional passive: "Had + subject + been + past participle." Hypothetical past situation.'},
-  {part:'Grammar',cat:'Grammar',text:'She ___ in this company for over 15 years next April.',opts:['works','will work','will have worked','has worked'],ans:2,exp:'Future Perfect: "will have worked" = action completed by a future point in time.'},
-  {part:'Grammar',cat:'Grammar',text:'Not only ___ costs, but the new system also improved efficiency.',opts:['the company reduced','reduced the company','did the company reduce','the company did reduce'],ans:2,exp:'Inversion after "Not only": auxiliary (did) + subject + verb.'},
-  {part:'Grammar',cat:'Grammar',text:'The report, together with the financial projections, ___ to the board.',opts:['were submitted','was submitted','have been submitted','are submitted'],ans:1,exp:'"The report" is the subject (singular). "Together with" does not change it. So: "was submitted."'},
-  {part:'Grammar',cat:'Grammar',text:'Provided that the budget ___, the project can proceed.',opts:['approves','is approved','will approve','has approved'],ans:1,exp:'After "provided that" (conditional), use present simple or passive: "is approved."'},
-  {part:'Grammar',cat:'Grammar',text:'We would appreciate ___ your response by Friday.',opts:['to receive','receiving','receive','having receive'],ans:1,exp:'"Appreciate + -ing": formal business English. "We would appreciate receiving..."'},
-  {part:'Grammar',cat:'Grammar',text:'___ the economic downturn, the company managed to increase profits.',opts:['Despite','Although','However','Even'],ans:0,exp:'"Despite + noun/gerund" shows contrast. "Despite the downturn" = even though there was a downturn.'},
-  // Vocabulary
-  {part:'Vocabulary',cat:'Vocabulary',text:'What does "ROI" stand for in business?',opts:['Rate of Interest','Return on Investment','Risk of Income','Revenue over Income'],ans:1,exp:'ROI = Return on Investment. It measures the gain from an investment relative to its cost.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'"Streamline" a process means to:',opts:['Make it more complicated','Make it more efficient and simpler','Outsource it','Cancel it'],ans:1,exp:'"Streamline" means to make a process more efficient by removing unnecessary steps.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'A "stakeholder" is:',opts:['A shareholder only','Anyone with an interest in the company','A bank lender','A government official'],ans:1,exp:'A stakeholder is anyone affected by or with an interest in an organization — employees, customers, investors, community.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'"Mitigate" risks means to:',opts:['Ignore them','Reduce their impact','Report them','Increase them'],ans:1,exp:'"Mitigate" means to lessen the severity or impact of something negative.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'What is "due diligence"?',opts:['Paying taxes on time','Thorough research before a business decision','A type of contract','A financial report'],ans:1,exp:'Due diligence = careful investigation before signing a contract or making an investment.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'"Leverage" in business means to:',opts:['Borrow money','Use something to maximum advantage','Reduce costs','Hire new staff'],ans:1,exp:'"Leverage" means to use a resource or advantage to achieve the best possible outcome.'},
-  {part:'Vocabulary',cat:'Vocabulary',text:'A "benchmark" is used to:',opts:['Set a deadline','Compare performance against a standard','Calculate profit','Manage staff'],ans:1,exp:'A benchmark is a standard or reference point used to measure and compare performance.'},
-  // Listening — business meeting dialogue
-  {part:'Listening',cat:'Listening',text:'What is the main topic of the meeting?',opts:['Staff recruitment','Q3 budget review','Product launch','Client complaints'],ans:1,exp:'David opens the meeting: "So the main item today is our Q3 budget review."'},
-  {part:'Listening',cat:'Listening',text:'What did the marketing department overspend on?',opts:['Staff costs','Digital advertising','Office supplies','Travel expenses'],ans:1,exp:'Sarah says: "Marketing overspent on digital advertising by about 15%."'},
-  {part:'Listening',cat:'Listening',text:'What does David suggest to address the overspend?',opts:['Cut the marketing team','Reallocate funds from operations','Take a bank loan','Delay the product launch'],ans:1,exp:'David says: "I suggest we reallocate some funds from the operations budget."'},
-  {part:'Listening',cat:'Listening',text:'What is Sarah\'s concern about the reallocation?',opts:['Operations will be disrupted','It is illegal','The board won\'t approve','It affects salaries'],ans:0,exp:'Sarah says: "My concern is that cutting operations could disrupt our day-to-day workflow."'},
-  {part:'Listening',cat:'Listening',text:'What is agreed at the end of the meeting?',opts:['Cancel marketing campaigns','Review all department budgets','Hire a financial consultant','Postpone the decision'],ans:1,exp:'David says: "Let\'s agree to review all department budgets by end of week."'},
-  // Reading — article about remote work trends
-  {part:'Reading',cat:'Reading',text:'According to the passage, what is the main benefit of remote work for employees?',opts:['Higher salaries','Flexibility and better work-life balance','Faster career progression','Access to better technology'],ans:1,exp:'The passage states that employees value flexibility and improved work-life balance as the primary benefit of remote work.'},
-  {part:'Reading',cat:'Reading',text:'What challenge do managers face with remote teams?',opts:['Higher costs','Maintaining team cohesion and communication','Legal compliance','Equipment shortages'],ans:1,exp:'The passage highlights that maintaining team cohesion and effective communication are the key challenges for managers of remote teams.'},
-  {part:'Reading',cat:'Reading',text:'What does "hybrid model" mean in the passage?',opts:['Working only from home','Working only in the office','A mix of office and remote work','Working for two companies'],ans:2,exp:'The hybrid model combines office-based and remote working, giving employees flexibility while maintaining some in-person collaboration.'},
-  {part:'Reading',cat:'Reading',text:'The word "productivity" in the passage refers to:',opts:['Employee happiness','The amount of useful work produced','Company profits','Number of employees'],ans:1,exp:'"Productivity" measures how efficiently work is done — the amount of output relative to input.'},
-  {part:'Reading',cat:'Reading',text:'What does the passage conclude about the future of work?',opts:['Remote work will disappear','The office will remain dominant','Flexible arrangements are here to stay','Technology will replace workers'],ans:2,exp:'The passage concludes that flexible working arrangements have become a permanent feature of the modern workplace.'},
+  // GRAMMAR (16)
+  {part:'Grammar',cat:'Grammar',text:'The merger ___ by the board last Tuesday.',opts:['approved','was approved','has approved','had been approving'],ans:1,lvl:1,exp:'Passive voice: WAS APPROVED. The subject (merger) received the action. Who did it is less important.'},
+  {part:'Grammar',cat:'Grammar',text:'We ___ the presentation when the client called.',opts:['prepare','prepared','were preparing','have prepared'],ans:2,lvl:1,exp:'Past Continuous: WERE PREPARING = action in progress when interrupted by the call.'},
+  {part:'Grammar',cat:'Grammar',text:'She ___ in this industry for over 20 years.',opts:['works','worked','has worked','is working'],ans:2,lvl:2,exp:'Present Perfect: HAS WORKED = started in the past, continues to now. Duration with "for".'},
+  {part:'Grammar',cat:'Grammar',text:'The report, together with the financial projections, ___ to the board.',opts:['were submitted','was submitted','have been submitted','are submitted'],ans:1,lvl:2,exp:'"The report" = singular subject. "Together with" does not change it. Singular = WAS submitted.'},
+  {part:'Grammar',cat:'Grammar',text:'Had the contract ___ earlier, we would have avoided the dispute.',opts:['signed','been signed','sign','be signed'],ans:1,lvl:2,exp:'3rd conditional passive: HAD BEEN SIGNED. Hypothetical past situation that didn't happen.'},
+  {part:'Grammar',cat:'Grammar',text:'Provided that the budget ___, the project can proceed.',opts:['approves','is approved','will approve','had approved'],ans:1,lvl:2,exp:'After conditional conjunctions (provided that, as long as), use present simple or passive.'},
+  {part:'Grammar',cat:'Grammar',text:'We would appreciate ___ your response by Friday.',opts:['to receive','receiving','receive','having receive'],ans:1,lvl:3,exp:'"Appreciate + -ing" (gerund). Formal business English: "We would appreciate receiving your reply."'},
+  {part:'Grammar',cat:'Grammar',text:'___ the economic downturn, the company managed to increase profits.',opts:['Despite','Although','However','Even if'],ans:0,lvl:3,exp:'"Despite + noun/gerund" shows contrast without a clause. "Despite the downturn" = even though there was one.'},
+  {part:'Grammar',cat:'Grammar',text:'Not only ___ costs, but the restructuring also improved efficiency.',opts:['the company reduced','reduced the company','did the company reduce','the company did reduce'],ans:2,lvl:3,exp:'Inversion after "Not only": auxiliary DID + subject + base verb. Formal written English.'},
+  {part:'Grammar',cat:'Grammar',text:'She ___ be promoted — her performance has been outstanding.',opts:['must','should','might','ought'],ans:0,lvl:3,exp:'MUST = strong logical deduction. Based on evidence (outstanding performance), promotion is almost certain.'},
+  {part:'Grammar',cat:'Grammar',text:'It is essential that every employee ___ the new protocol.',opts:['follows','follow','will follow','followed'],ans:1,lvl:4,exp:'After "essential that", "important that", "necessary that" → subjunctive (base form): FOLLOW (not follows).'},
+  {part:'Grammar',cat:'Grammar',text:'The strategy ___ further refinement before implementation.',opts:['requires','is requiring','has required','required'],ans:0,lvl:4,exp:'State verbs (require, need, contain) rarely use continuous. Simple present: REQUIRES.'},
+  {part:'Grammar',cat:'Grammar',text:'Seldom ___ such a comprehensive proposal from a new client.',opts:['we have received','have we received','we received','did we received'],ans:1,lvl:4,exp:'Inversion after negative adverbs (Seldom, Rarely, Never): auxiliary HAVE + subject + past participle.'},
+  {part:'Grammar',cat:'Grammar',text:'The CEO suggested ___ the deadline by two weeks.',opts:['to extend','extending','extend','having extended'],ans:1,lvl:4,exp:'"Suggest + -ing" (gerund). Common reporting verbs with gerunds: suggest, recommend, consider, avoid.'},
+  {part:'Grammar',cat:'Grammar',text:'Were the team ___ properly, productivity would significantly improve.',opts:['managed','to be managed','being managed','manage'],ans:1,lvl:5,exp:'Inverted conditional (formal): WERE + subject + TO BE + past participle = If the team were to be managed properly.'},
+  {part:'Grammar',cat:'Grammar',text:'No sooner ___ the agreement than complications arose.',opts:['they signed','did they sign','had they signed','they had signed'],ans:2,lvl:5,exp:'"No sooner + Past Perfect + than + Past Simple." Inversion required: HAD THEY SIGNED.'},
+  // VOCABULARY (16)
+  {part:'Vocabulary',cat:'Vocabulary',text:'What does "ROI" stand for?',opts:['Rate of Interest','Return on Investment','Risk of Income','Revenue over Income'],ans:1,lvl:1,exp:'ROI = Return on Investment. It measures profit gained relative to the cost of the investment.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Streamline" a process means to:',opts:['Make it more complicated','Remove unnecessary steps to make it efficient','Outsource it to another company','Cancel it entirely'],ans:1,lvl:1,exp:'"Streamline" = simplify and make more efficient by eliminating unnecessary steps or costs.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'A "stakeholder" is:',opts:['Only a company shareholder','Anyone with an interest or stake in the organisation','A bank that lends money','A government regulator'],ans:1,lvl:2,exp:'Stakeholders = everyone affected by or with interest in an organisation: employees, customers, investors, community.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Mitigate" risks means to:',opts:['Completely eliminate them','Ignore them until necessary','Reduce their likelihood or impact','Report them to management'],ans:2,lvl:2,exp:'"Mitigate" = lessen the severity or impact of risks. You can rarely eliminate risk completely.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What is "due diligence"?',opts:['Paying taxes punctually','Thorough research before a major business decision','A standard employment contract','A type of financial audit'],ans:1,lvl:2,exp:'Due diligence = careful investigation of a company/opportunity before signing contracts or investing.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Leverage" in business context means:',opts:['Taking out a large loan','Using available resources to maximum strategic advantage','Reducing the workforce','Increasing product prices'],ans:1,lvl:2,exp:'"Leverage" = using what you have (data, relationships, technology) to achieve the best possible outcome.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'A "benchmark" is used to:',opts:['Set project deadlines','Compare performance against an established standard','Calculate quarterly profit','Evaluate employee satisfaction'],ans:1,lvl:3,exp:'A benchmark is a reference point used to measure and compare performance, quality, or progress.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What does "scalable" mean for a business?',opts:['Expensive to run','Able to grow without proportional cost increases','Focused on a niche market','Dependent on government funding'],ans:1,lvl:3,exp:'"Scalable" = a business model that can grow and handle increased demand without costs growing at the same rate.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Proactive" approach means:',opts:['Waiting for problems to occur before acting','Taking initiative and anticipating future issues','Following instructions only','Reacting quickly to crises'],ans:1,lvl:3,exp:'"Proactive" = acting in advance to deal with expected problems, rather than waiting and reacting.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What does "pivot" mean in a startup context?',opts:['Expanding into new markets','Fundamentally changing business strategy or product direction','Reducing company size','Going public on the stock market'],ans:1,lvl:3,exp:'A "pivot" = a significant change in business strategy, usually because the original approach isn't working.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Remuneration" refers to:',opts:['Employee benefits only','Payment or compensation for work','Company profits','Investment returns'],ans:1,lvl:4,exp:'"Remuneration" = formal word for pay, salary, or compensation for services rendered.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What does "fiduciary duty" mean?',opts:['A legal obligation to act in someone's best interest','A type of business insurance','A tax filing requirement','A shareholder agreement'],ans:0,lvl:4,exp:'"Fiduciary duty" = legal/ethical obligation to act in the best interest of another party (e.g., board members to shareholders).'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Asymmetric information" in economics means:',opts:['Equal knowledge between all parties','One party has more or better information than another','Information shared only digitally','Data that cannot be verified'],ans:1,lvl:4,exp:'"Asymmetric information" = when parties in a transaction have unequal access to relevant information (e.g., seller knows more than buyer).'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'A "paradigm shift" refers to:',opts:['A small process improvement','A fundamental change in underlying assumptions or approach','A new marketing campaign','A change in leadership'],ans:1,lvl:5,exp:'"Paradigm shift" = a fundamental change in the basic concepts and practices of a field. Term coined by Thomas Kuhn.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'"Obfuscate" means to:',opts:['Clearly explain something','Make something unclear or difficult to understand','Summarise key points','Delegate responsibility'],ans:1,lvl:5,exp:'"Obfuscate" = to deliberately make something confusing or unclear. Often used when someone avoids transparency.'},
+  {part:'Vocabulary',cat:'Vocabulary',text:'What does "synergy" mean in business?',opts:['A financial loss','Two entities combining to produce a greater combined effect','A conflict between departments','A cost-cutting strategy'],ans:1,lvl:5,exp:'"Synergy" = the concept that combined efforts produce more than the sum of individual efforts. 1+1=3 in business terms.'},
+  // LISTENING (4)
+  {part:'Listening',cat:'Listening',text:'What is the main topic of the meeting?',opts:['Staff recruitment','Q3 budget review','Product launch strategy','Client complaint resolution'],ans:1,lvl:1,exp:'David opens: "So the main item today is our Q3 budget review."'},
+  {part:'Listening',cat:'Listening',text:'By how much did marketing overspend on digital advertising?',opts:['5%','10%','15%','20%'],ans:2,lvl:2,exp:'Sarah says: "Marketing overspent on digital advertising by about 15%."'},
+  {part:'Listening',cat:'Listening',text:'What is Sarah's concern about reallocating funds from operations?',opts:['It is illegal','It will disrupt day-to-day workflow','The board won't approve','It affects employee salaries'],ans:1,lvl:3,exp:'Sarah says: "My concern is that cutting operations could disrupt our day-to-day workflow."'},
+  {part:'Listening',cat:'Listening',text:'What does David agree to do before Thursday's meeting?',opts:['Cancel marketing campaigns','Review all department budgets','Hire a financial consultant','Present to the board'],ans:1,lvl:3,exp:'David says: "Let's agree to review all department budgets by end of week and reconvene Thursday."'},
+  // READING (4)
+  {part:'Reading',cat:'Reading',text:'What do employees value most about remote work according to the passage?',opts:['Higher salaries','Flexibility and improved work-life balance','Faster career advancement','Access to better technology'],ans:1,lvl:2,exp:'The passage states: employees value flexibility and improved work-life balance as the primary benefit.'},
+  {part:'Reading',cat:'Reading',text:'What does the passage identify as the key challenge for managers of remote teams?',opts:['Higher operational costs','Legal compliance across regions','Maintaining team cohesion and communication','Providing adequate technology'],ans:2,lvl:2,exp:'The passage highlights: maintaining team cohesion and effective communication are the key challenges.'},
+  {part:'Reading',cat:'Reading',text:'What does the passage conclude about the hybrid model?',opts:['It is less productive than full office work','It is only suitable for large companies','It appears to achieve the best balance','It creates more problems than it solves'],ans:2,lvl:3,exp:'The passage states: "Companies that have adopted a hybrid model appear to achieve the best balance."'},
+  {part:'Reading',cat:'Reading',text:'The word "distributed" in the passage (referring to teams) most closely means:',opts:['Poorly managed','Working across different locations','Recently hired','Highly specialised'],ans:1,lvl:3,exp:'"Distributed teams" = teams whose members work in different locations, not in one central office.'},
 ];
 
 // ══════════════════════════════════════
@@ -596,16 +659,16 @@ const CONTENT = {
 };
 
 const levelMap=[
-  {min:0,max:5,code:'A1',name:'Beginner'},
-  {min:6,max:10,code:'A2',name:'Elementary'},
-  {min:11,max:15,code:'B1',name:'Intermediate'},
-  {min:16,max:20,code:'B2',name:'Upper-Intermediate'},
-  {min:21,max:25,code:'C1',name:'Advanced'},
+  {min:0,max:8,code:'A1',name:'Beginner'},
+  {min:9,max:16,code:'A2',name:'Elementary'},
+  {min:17,max:24,code:'B1',name:'Intermediate'},
+  {min:25,max:32,code:'B2',name:'Upper-Intermediate'},
+  {min:33,max:40,code:'C1',name:'Advanced'},
 ];
 const kidsLevelMap=[
-  {min:0,max:6,code:'A1',name:'Beginner'},
-  {min:7,max:13,code:'A2',name:'Elementary'},
-  {min:14,max:20,code:'B1',name:'Intermediate'},
+  {min:0,max:10,code:'A1',name:'Beginner'},
+  {min:11,max:20,code:'A2',name:'Elementary'},
+  {min:21,max:30,code:'B1',name:'Intermediate'},
 ];
 
 const partOrder=['Grammar','Vocabulary','Listening','Reading'];
@@ -642,33 +705,110 @@ function showScreen(id){
 function goAge(){stopAudio();clearInterval(timerInterval);showScreen('screen-age');}
 
 // ══════════════════════
-// BUILD TEST
+// ADAPTIVE TEST ENGINE (CAT)
 // ══════════════════════
 function shuffle(arr){return[...arr].sort(()=>Math.random()-.5);}
+
+// Adaptive state
+let ability = 2.5;        // Current estimated ability (1-5 scale)
+let usedIds = new Set();  // Already shown question IDs
+let adaptiveHistory = []; // [{lvl, correct}]
+const MAX_Q = {kids:20, teens:25, adults:25};
 
 function startTest(group){
   ageGroup=group;
   current=0;score=0;selected=-1;
+  ability=2.5; usedIds=new Set(); adaptiveHistory=[];
   catScores={Grammar:[0,0],Vocabulary:[0,0],Listening:[0,0],Reading:[0,0]};
   shownParts=new Set();transcriptVisible=false;
-
-  const bank = group==='kids'?kidsQuestions : group==='teens'?teensQuestions : adultsQuestions;
-  const byPart={};
-  partOrder.forEach(p=>byPart[p]=[]);
-  bank.forEach(q=>byPart[q.part] && byPart[q.part].push(q));
   questions=[];
-  partOrder.forEach(p=>shuffle(byPart[p]||[]).forEach(q=>questions.push(q)));
 
-  // Timer: kids=15min, teens=20min, adults=25min
-  timerSecs = group==='kids'?15*60 : group==='adults'?25*60 : 20*60;
+  // Pre-build ordered section intros (Listening & Reading always at end)
+  timerSecs = group==='kids'?15*60 : group==='adults'?30*60 : 25*60;
   startTimer();
 
-  // Kids card style
   const tc=document.getElementById('test-card');
   tc.className = group==='kids' ? 'test-card kids-card' : 'test-card';
 
+  // Pick first question (medium difficulty)
+  const nextQ = pickNextQuestion(2, ['Grammar','Vocabulary']);
+  if(nextQ) questions.push(nextQ);
+
   showScreen('screen-test');
   renderQ();
+}
+
+function getBank(){
+  return ageGroup==='kids'?kidsQuestions : ageGroup==='teens'?teensQuestions : adultsQuestions;
+}
+
+function pickNextQuestion(targetLvl, preferredParts){
+  const bank = getBank();
+  const maxQ = MAX_Q[ageGroup];
+  
+  // Determine which parts are still needed
+  const grammarDone = [...usedIds].filter(id=>bank[id]&&bank[id].part==='Grammar').length;
+  const vocabDone   = [...usedIds].filter(id=>bank[id]&&bank[id].part==='Vocabulary').length;
+  const listenDone  = [...usedIds].filter(id=>bank[id]&&bank[id].part==='Listening').length;
+  const readDone    = [...usedIds].filter(id=>bank[id]&&bank[id].part==='Reading').length;
+
+  const totalDone = usedIds.size;
+  
+  // Force Listening section after 60% of test
+  // Force Reading section after 80% of test
+  let allowedParts;
+  if(totalDone >= Math.floor(maxQ*0.8) && readDone===0){
+    allowedParts=['Reading'];
+  } else if(totalDone >= Math.floor(maxQ*0.6) && listenDone===0){
+    allowedParts=['Listening'];
+  } else if(preferredParts){
+    allowedParts=preferredParts;
+  } else {
+    allowedParts=['Grammar','Vocabulary'];
+  }
+
+  // Find candidates: matching level ±1, not used, in allowed parts
+  let candidates = bank
+    .map((q,i)=>({...q,_id:i}))
+    .filter(q=>!usedIds.has(q._id))
+    .filter(q=>allowedParts.includes(q.part))
+    .filter(q=>Math.abs(q.lvl - targetLvl) <= 1);
+
+  // If no candidates at this level, widen search
+  if(candidates.length===0){
+    candidates = bank
+      .map((q,i)=>({...q,_id:i}))
+      .filter(q=>!usedIds.has(q._id))
+      .filter(q=>allowedParts.includes(q.part));
+  }
+
+  if(candidates.length===0) return null;
+
+  // Pick closest to target level
+  candidates.sort((a,b)=>Math.abs(a.lvl-targetLvl)-Math.abs(b.lvl-targetLvl));
+  const picked = candidates[0];
+  usedIds.add(picked._id);
+  return picked;
+}
+
+function updateAbility(correct, questionLvl){
+  // Simple ability estimation: move toward question level
+  const step = 0.4;
+  if(correct){
+    ability = Math.min(5, ability + step * (questionLvl / ability));
+  } else {
+    ability = Math.max(1, ability - step * (ability / questionLvl));
+  }
+  adaptiveHistory.push({lvl:questionLvl, correct});
+}
+
+function getNextAdaptiveQuestion(){
+  const maxQ = MAX_Q[ageGroup];
+  const totalDone = usedIds.size;
+  if(totalDone >= maxQ) return null;
+
+  const targetLvl = Math.round(Math.min(5, Math.max(1, ability)));
+  return pickNextQuestion(targetLvl, null);
 }
 
 // ══════════════════════
@@ -694,9 +834,10 @@ function updateTimer(){
 // ══════════════════════
 function renderQ(){
   const q=questions[current],total=questions.length,t=T[lang];
-  const pct=Math.round(current/total*100);
+  const pct=Math.round(current/MAX_Q[ageGroup]*100);
   document.getElementById('prog-fill').style.width=pct+'%';
-  document.getElementById('q-num').textContent=(current+1)+' / '+total;
+  const maxQ = MAX_Q[ageGroup];
+  document.getElementById('q-num').textContent=(current+1)+' / ~'+maxQ;
   document.getElementById('q-sec').textContent=partIcons[q.part]+' '+q.part;
   document.getElementById('part-label').textContent=q.part;
 
@@ -786,12 +927,23 @@ function selectOpt(idx){
   function type(){if(i<comment.length){expText.textContent+=comment[i];i++;setTimeout(type,18);}}
   type();
 
+  // Update adaptive ability estimate
+  updateAbility(correct, q.lvl||2);
   document.getElementById('next-btn').classList.add('show');
 }
 
 function nextQ(){
-  stopAudio();current++;
-  if(current>=questions.length){showResult();return;}
+  stopAudio();
+  const maxQ = MAX_Q[ageGroup];
+  current++;
+
+  // Check if test is done
+  if(usedIds.size >= maxQ){showResult();return;}
+
+  // Pick next adaptive question
+  const next = getNextAdaptiveQuestion();
+  if(!next){showResult();return;}
+  questions.push(next);
   renderQ();
 }
 
@@ -849,14 +1001,26 @@ function toggleTranscript(){
 function showResult(){
   clearInterval(timerInterval);stopAudio();
   const t=T[lang];
-  const lm=ageGroup==='kids'?kidsLevelMap:levelMap;
-  const level=lm.find(l=>score>=l.min&&score<=l.max)||lm[lm.length-1];
+  // Adaptive level: based on ability score, not just correct count
+  const abilityToLevel = (ab) => {
+    if(ab < 1.5) return 'A1';
+    if(ab < 2.2) return 'A2';
+    if(ab < 3.0) return 'B1';
+    if(ab < 3.8) return 'B2';
+    if(ab < 4.5) return 'C1';
+    return 'C2';
+  };
+  const lm = ageGroup==='kids'?kidsLevelMap:levelMap;
+  const adaptiveCode = ageGroup==='kids'
+    ? (ability<1.8?'A1':ability<2.5?'A2':'B1')
+    : abilityToLevel(ability);
+  const level = lm.find(l=>l.code===adaptiveCode) || lm[lm.length-1];
   const ld=t.levels[level.code]||{name:level.name,desc:''};
 
   document.getElementById('res-badge').textContent=t.resBadge;
   document.getElementById('res-code').textContent=level.code;
   document.getElementById('res-name').textContent=ld.name;
-  document.getElementById('res-score').textContent=score+' / '+questions.length;
+  document.getElementById('res-score').textContent=score+' / '+questions.length+' correct';
   document.getElementById('res-desc').textContent=ld.desc;
   document.getElementById('cert-lbl').textContent=t.certLbl;
   document.getElementById('cert-sub').textContent=t.certSub;
@@ -881,6 +1045,12 @@ function showResult(){
     grid.appendChild(d);
   });
   setTimeout(()=>document.querySelectorAll('.skill-fill').forEach(el=>el.style.width=el.dataset.w),150);
+  // Animate ability meter (ability 1-5 → 0-100%)
+  const meterPct = Math.round(((ability-1)/4)*100);
+  setTimeout(()=>{
+    const mf=document.getElementById('meter-fill');
+    if(mf) mf.style.width=meterPct+'%';
+  },300);
 
   showScreen('screen-result');
 }
